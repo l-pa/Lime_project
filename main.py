@@ -11,14 +11,18 @@ def main():
     test_pos = 50, 50
     mouse_x = 0
     mouse_y = 0
+
+    mousePixelX = 0;
+    mousePixelY = 0;
+
     max_FPS = 144
-    brush_color = (255, 255, 255)
+    brush_color = (255,255,255)
     brush_size = 1
 
     #Colors
-    color_one = (255, 0, 0)
-    color_two = (0, 255, 0)
-    color_three = (0, 0, 255)
+    color_one = (255, 255, 255)
+    color_two = (0, 0, 0)
+    color_three = (255, 0, 0)
     color_four = (255, 255, 0)
     color_five = (255, 0, 255)
     color_six = (0, 255, 255)
@@ -44,7 +48,7 @@ def main():
         return background_color
 
     def inverted_rgb():
-        color = RGB_mouse_color(800,600)
+        color = RGB_mouse_color(800, 600)
         return color
 
     # Blit everything to the screen
@@ -55,6 +59,9 @@ def main():
     def draw_box(x, y, width, height, surface, box_color):
         rectangle = pygame.Rect(x, y, width, height)
         pygame.gfxdraw.box(surface, rectangle, box_color)
+
+    def draw_line(x, y, startX, startY, size):
+        pygame.draw.aaline(background, brush_color,(x,y),(startX,startY), size)
 
 
     # Display some text
@@ -75,7 +82,14 @@ def main():
 
             if pygame.mouse.get_pressed() == (1, 0, 0):
                 print(pygame.mouse.get_pressed())
-                draw_box(mouse_x - brush_size, mouse_y - brush_size, brush_size, brush_size, background, brush_color)
+                # draw_box(mouse_x - brush_size, mouse_y - brush_size, brush_size, brush_size, background, brush_color)
+                draw_line(mouse_x, mouse_y, mousePixelX, mousePixelY, brush_size)
+
+
+            if pygame.mouse.get_pressed() == (0, 0, 1):
+                mousePixelX = mouse_x
+                mousePixelY = mouse_y
+                pygame.draw.circle(background, brush_color, (mousePixelX, mousePixelY), brush_size, brush_size)
 
             if pressed[pygame.K_0]:
                 print("0")
@@ -90,18 +104,14 @@ def main():
                 brush_color = color_four
             if pressed[pygame.K_5]:
                 brush_color = color_five
-            if pressed[pygame.K_6]:
-                brush_color = color_six
-            # if pressed[pygame.K_7]:
-            #     brush_color = color_zero
-            # if pressed[pygame.K_8]:
-            #     brush_color = color_zero
+
             if pressed[pygame.K_9]:
                 brush_size +=1
                 print(brush_size)
             if pressed[pygame.K_8]:
-                brush_size -= 1
-                print(brush_size)
+                if brush_size > 0:
+                    brush_size -= 1
+                    print(brush_size)
 
         mouse_x, mouse_y = pygame.mouse.get_pos()
         screen.blit(background, (0, 0))
